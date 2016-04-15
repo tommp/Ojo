@@ -7,6 +7,10 @@
 #include "EGL/egl.h"
 #include "EGL/eglext.h"	
 
+#if RBP2
+#include "bcm_host.h"
+#endif
+
 typedef struct HAL_Window{
 	EGLNativeWindowType native_window;
 
