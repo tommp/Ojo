@@ -41,8 +41,8 @@ distclean: clean
 
 include $(current_path)/make/platforms.mk
 
-ifeq ($(WINDOW_SYSTEM), $(RBP))
-	include $(current_path)/make/rbp.mk
+ifeq ($(WINDOW_SYSTEM), $(DISPMANX))
+	include $(current_path)/make/dispmanx.mk
 else ifeq ($(WINDOW_SYSTEM), $(SDL))
 	include $(current_path)/make/sdl.mk
 endif

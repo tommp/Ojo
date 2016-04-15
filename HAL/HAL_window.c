@@ -1,7 +1,7 @@
 #include "HAL_window.h"
 
 EGLint init_window(HAL_Window* window){
-#if WINDOW_SYSTEM == RBP
+#if WINDOW_SYSTEM == DISPMANX
 	int32_t success = 0;
 	success = graphics_get_display_size(0 /* LCD */, &window->window_width, &window->window_height);
 	if (success < 0 ){
