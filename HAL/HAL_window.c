@@ -10,13 +10,13 @@ EGLint init_window(HAL_Window* window){
 
 	window->dst_rect.x = 0;
 	window->dst_rect.y = 0;
-	window->dst_rect.width = width;
-	window->dst_rect.height = height;
+	window->dst_rect.width = window->window_width;
+	window->dst_rect.height = window->window_height;
 
 	window->src_rect.x = 0;
 	window->src_rect.y = 0;
-	window->src_rect.width = width << 16;
-	window->src_rect.height = height << 16;        
+	window->src_rect.width = window->window_width << 16;
+	window->src_rect.height = window->window_height << 16;        
 
 	window->dispman_display = vc_dispmanx_display_open(0 /* LCD */);
 	window->dispman_update = vc_dispmanx_update_start(0);
@@ -26,8 +26,8 @@ EGLint init_window(HAL_Window* window){
 				&window->src_rect, DISPMANX_PROTECTION_NONE, 0 /*alpha*/, 0/*clamp*/, 0/*transform*/);
 
 	window->native_window.element = window->dispman_element;
-	window->native_window.width = width;
-	window->native_window.height = height;
+	window->native_window.width = window->window_width;
+	window->native_window.height = window->window_height;
 	vc_dispmanx_update_submit_sync(window->dispman_update);
 #endif
 
