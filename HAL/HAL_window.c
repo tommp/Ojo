@@ -29,7 +29,7 @@ EGLint init_window(HAL_Window* window){
 	window->dispmax_window.width = window->window_width;
 	window->dispmax_window.height = window->window_height;
 
-	native_window = &dispmax_window;
+	window->native_window = &dispmax_window;
 	vc_dispmanx_update_submit_sync(window->dispman_update);
 #endif
 
