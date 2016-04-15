@@ -25,9 +25,11 @@ EGLint init_window(HAL_Window* window){
 				0/*layer*/, &window->dst_rect, 0/*src*/,
 				&window->src_rect, DISPMANX_PROTECTION_NONE, 0 /*alpha*/, 0/*clamp*/, 0/*transform*/);
 
-	window->native_window.element = window->dispman_element;
-	window->native_window.width = window->window_width;
-	window->native_window.height = window->window_height;
+	window->dispmax_window.element = window->dispman_element;
+	window->dispmax_window.width = window->window_width;
+	window->dispmax_window.height = window->window_height;
+
+	native_window = &dispmax_window;
 	vc_dispmanx_update_submit_sync(window->dispman_update);
 #endif
 

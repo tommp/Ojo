@@ -20,7 +20,8 @@ typedef struct HAL_Window{
 #endif
 
 #if RBP2
-	EGL_DISPMANX_WINDOW_T native_window;
+	EGL_DISPMANX_WINDOW_T dispmax_window;
+	EGLNativeWindowType native_window;
 	DISPMANX_DISPLAY_HANDLE_T dispman_display;
    	DISPMANX_ELEMENT_HANDLE_T dispman_element;
 	DISPMANX_UPDATE_HANDLE_T dispman_update;
