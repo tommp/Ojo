@@ -13,6 +13,8 @@
 
 typedef struct HAL_Window{
 	EGLNativeWindowType native_window;
+	EGLint window_width;
+	EGLint window_height;
 
 #if RBP2
 	DISPMANX_DISPLAY_HANDLE_T dispman_display;
@@ -24,6 +26,6 @@ typedef struct HAL_Window{
 
 }HAL_Window;
 
-EGLint init_window(HAL_Window* window, EGLint width, EGLint height);
+EGLint init_window(HAL_Window* window);
 
 #endif

@@ -1,9 +1,9 @@
 #include "HAL_window.h"
 
-EGLint init_window(HAL_Window* window, EGLint width, EGLint height){
+EGLint init_window(HAL_Window* window){
 #if RBP2
 	int32_t success = 0;
-	success = graphics_get_display_size(0 /* LCD */, &width, &height);
+	success = graphics_get_display_size(0 /* LCD */, &window_width, &window_height);
 	if (success < 0 ){
 		return ERROR_WINDOW_INIT;
 	}

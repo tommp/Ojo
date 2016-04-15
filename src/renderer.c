@@ -29,7 +29,7 @@ EGLint init_renderer(Renderer* renderer){
 
    	/* Platform specific */
 
-   	return_val = init_window(&renderer->window, renderer->screen_width, renderer->screen_height);//graphics_get_display_size(0 /* LCD */, renderer->screen_width, renderer->screen_height);
+   	return_val = init_window(&renderer->window);//graphics_get_display_size(0 /* LCD */, renderer->screen_width, renderer->screen_height);
 	if (return_val < 0 ){
 		return ERROR_INIT_WINDOW;
 	}
