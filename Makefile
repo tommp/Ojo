@@ -9,11 +9,12 @@ current_path := $(abspath ../$(current_dir))
 
 
 program_C_SRCS := $(wildcard src/*.c)
+program_C_SRCS += $(wildcard HAL/*.c)
 program_OBJS := ${program_C_SRCS:.c=.o}
 
 OPENGL_LIB := GLESv2 EGL
 
-program_INCLUDE_DIRS := $(current_path) $(current_path)/src/headers/ $(SDKSTAGE)/opt/vc/include/ $(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads $(SDKSTAGE)/opt/vc/include/interface/vmcs_host/linux ./libs/vgfont ./libs/ilclient
+program_INCLUDE_DIRS := $(current_path) $(current_path)/HAL/headers/ $(current_path)/src/headers/ $(SDKSTAGE)/opt/vc/include/ $(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads $(SDKSTAGE)/opt/vc/include/interface/vmcs_host/linux ./libs/vgfont ./libs/ilclient
 program_LIBRARY_DIRS := $(current_path)/src/lib/static $(SDKSTAGE)/opt/vc/lib/ ./libs/ilclient ./libs/vgfont
 program_LIBRARIES := $(OPENGL_LIB) pthread rt m 
 

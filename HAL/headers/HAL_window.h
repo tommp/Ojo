@@ -1,0 +1,25 @@
+#ifndef WINDOW_H
+#define WINDOW_H
+
+#include "HAL_DEFINES.h"
+
+#include "GLES2/gl2.h"
+#include "EGL/egl.h"
+#include "EGL/eglext.h"	
+
+typedef struct HAL_Window{
+	EGLNativeWindowType native_window;
+
+#if RBP2
+	DISPMANX_DISPLAY_HANDLE_T dispman_display;
+   	DISPMANX_ELEMENT_HANDLE_T dispman_element;
+	DISPMANX_UPDATE_HANDLE_T dispman_update;
+	VC_RECT_T dst_rect;
+	VC_RECT_T src_rect;
+#endif
+
+}HAL_Window;
+
+EGLint init_window(HAL_Window* window, EGLint width, EGLint height);
+
+#endif
