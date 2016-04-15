@@ -14,13 +14,13 @@
 typedef struct HAL_Window{
 	uint32_t window_width;
 	uint32_t window_height;
-	
+
 #if SDL2
 	EGLNativeWindowType native_window;
 #endif
 
 #if RBP2
-	static EGL_DISPMANX_WINDOW_T native_window;
+	EGL_DISPMANX_WINDOW_T native_window;
 	DISPMANX_DISPLAY_HANDLE_T dispman_display;
    	DISPMANX_ELEMENT_HANDLE_T dispman_element;
 	DISPMANX_UPDATE_HANDLE_T dispman_update;
