@@ -1,7 +1,7 @@
 #include "HAL_window.h"
 
 EGLint init_window(HAL_Window* window){
-#if RBP2
+#if WINDOW_SYSTEM == RBP
 	int32_t success = 0;
 	success = graphics_get_display_size(0 /* LCD */, &window->window_width, &window->window_height);
 	if (success < 0 ){
@@ -25,11 +25,11 @@ EGLint init_window(HAL_Window* window){
 				0/*layer*/, &window->dst_rect, 0/*src*/,
 				&window->src_rect, DISPMANX_PROTECTION_NONE, 0 /*alpha*/, 0/*clamp*/, 0/*transform*/);
 
-	window->dispmax_window.element = window->dispman_element;
-	window->dispmax_window.width = window->window_width;
-	window->dispmax_window.height = window->window_height;
+	window->dispmanx_window.element = window->dispman_element;
+	window->dispmanx_window.width = window->window_width;
+	window->dispmanx_window.height = window->window_height;
 
-	window->native_window = &window->dispmax_window;
+	window->native_window = &window->dispmanx_window;
 	vc_dispmanx_update_submit_sync(window->dispman_update);
 #endif
 

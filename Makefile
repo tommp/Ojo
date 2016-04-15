@@ -6,8 +6,6 @@ mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 current_path := $(abspath ../$(current_dir))
 
-
-
 program_C_SRCS := $(wildcard src/*.c)
 program_C_SRCS += $(wildcard HAL/*.c)
 program_OBJS := ${program_C_SRCS:.c=.o}
@@ -23,7 +21,6 @@ CFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
 
-
 all: $(program_EXECUTABLE)
 
 $(program_OBJS):%.o:%.c
@@ -38,5 +35,16 @@ clean:
 
 distclean: clean
 
-.PHONY: all clean distclean
+.PHONY: clean distclean all
 
+# Platform specifics #########################
+
+include $(current_path)/make/platforms.mk
+
+ifeq ($(WINDOW_SYSTEM), $(RBP))
+	include $(current_path)/make/rbp.mk
+else ifeq ($(WINDOW_SYSTEM), $(SDL))
+	include $(current_path)/make/sdl.mk
+endif
+
+##############################################

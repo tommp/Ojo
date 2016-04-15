@@ -7,7 +7,7 @@
 #include "EGL/egl.h"
 #include "EGL/eglext.h"	
 
-#if RBP2
+#if WINDOW_SYSTEM == RBP
 #include "bcm_host.h"
 #endif
 
@@ -15,12 +15,12 @@ typedef struct HAL_Window{
 	uint32_t window_width;
 	uint32_t window_height;
 
-#if SDL2
+#if WINDOW_SYSTEM == SDL
 	EGLNativeWindowType native_window;
 #endif
 
-#if RBP2
-	EGL_DISPMANX_WINDOW_T dispmax_window;
+#if WINDOW_SYSTEM == RBP
+	EGL_DISPMANX_WINDOW_T dispmanx_window;
 	EGLNativeWindowType native_window;
 	DISPMANX_DISPLAY_HANDLE_T dispman_display;
    	DISPMANX_ELEMENT_HANDLE_T dispman_element;
