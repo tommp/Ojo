@@ -13,8 +13,8 @@
 
 typedef struct HAL_Window{
 	EGLNativeWindowType native_window;
-	EGLint window_width;
-	EGLint window_height;
+	uint32_t window_width;
+	uint32_t window_height;
 
 #if RBP2
 	DISPMANX_DISPLAY_HANDLE_T dispman_display;
