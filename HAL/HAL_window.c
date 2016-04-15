@@ -3,7 +3,7 @@
 EGLint init_window(HAL_Window* window, EGLint width, EGLint height){
 #if RBP2
 	int32_t success = 0;
-	success = graphics_get_display_size(0 /* LCD */, &state->screen_width, &state->screen_height);
+	success = graphics_get_display_size(0 /* LCD */, &width, &height);
 	if (success < 0 ){
 		return ERROR_WINDOW_INIT;
 	}
