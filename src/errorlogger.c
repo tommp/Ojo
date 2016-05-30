@@ -9,7 +9,7 @@ void errorlogger(const char *errormsg){
 
     printf("    Error: %s\n     Date: %s\n\n", errormsg, date );
 
-    FILE *errorlog = fopen(outputFilename, "w");
+    FILE *errorlog = fopen(outputFilename, "a+");
     if (errorlog != NULL) {
         fprintf(errorlog, "Date: %s Error: %s\n\n", date, errormsg);
         fclose(errorlog);

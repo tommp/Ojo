@@ -28,9 +28,11 @@
 
 typedef struct HAL_image_sampler{
     GLint driver_file_descriptor;
-    uint8_t* buffer;
+    unsigned char* buffer;
     GLint buffer_width;
     GLint buffer_height;
+
+    GLuint current_sample;
 }HAL_image_sampler;
 
 GLint init_image_sampler(HAL_image_sampler* sampler);
@@ -38,5 +40,6 @@ GLint destroy_image_sampler(HAL_image_sampler* sampler);
 GLint sample_grayscale_image(HAL_image_sampler* sampler);
 GLint init_mmap(HAL_image_sampler* sampler);
 GLint capture_image(HAL_image_sampler* sampler);
+GLint configure_settings(HAL_image_sampler* sampler);
 
 #endif

@@ -23,11 +23,19 @@ int main(int argc, char* argv[]) {
     printf("Image sampler initialized!\n\n");
 
     //Main Loop
-    capture_image(&sampler);
+    /* ================================================ */
+    printf("Main loop running!\n\n");
+    int i;
+    for(i = 0; i < 200; ++i){
+        capture_image(&sampler);
+    }
+
     GLuint running = 1;
     while(running){
         break;
     }
+    printf("Exiting main loop!\n\n");
+    /* ================================================ */
 
     printf("Cleaning up...\n\n");
     return_val = destroy_renderer(&renderer);

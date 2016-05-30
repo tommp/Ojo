@@ -7,6 +7,10 @@
 #define IMAGE_SAMPLER           RBP_CSI
 #define WINDOW_SYSTEM           DISPMANX
 #define STORE_SAMPLE_IMAGE      1
+#define MAX_NUM_SAMPLES         50
+#define TV_TIME                 2
+#define CONFIGURE_SETTINGS      0
+#define MAX_UNIFORMS            10
 
 #define FOLDER_PATH             "/home/pi/Ojo/"
 #define IMAGE_SAMPLE_FOLDER     "samples/"
