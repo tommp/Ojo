@@ -23,6 +23,7 @@ int main(int argc, char* argv[]) {
     printf("Image sampler initialized!\n\n");
 
     //Main Loop
+    capture_image(&sampler);
     GLuint running = 1;
     while(running){
         break;

@@ -5,12 +5,11 @@ void errorlogger(const char *errormsg){
     struct tm *date_raw = gmtime(&current);
     char *date = asctime(date_raw);
 
-    FILE *errorlog;
     char outputFilename[] = ERROR_FILE_NAME;
 
     printf("    Error: %s\n     Date: %s\n\n", errormsg, date );
 
-    errorlog = fopen(outputFilename, "w");
+    FILE *errorlog = fopen(outputFilename, "w");
     if (errorlog != NULL) {
         fprintf(errorlog, "Date: %s Error: %s\n\n", date, errormsg);
         fclose(errorlog);

@@ -15,6 +15,7 @@
 #endif
 
 #include "utility.h"
+#include "CONFIG.h"
 
 #include "GLES2/gl2.h"
 #include "EGL/egl.h"

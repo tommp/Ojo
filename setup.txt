@@ -1,0 +1,14 @@
+Not needed on newer distros:
+git clone git://git.linuxtv.org/v4l-utils.git
+cd v4l-utils
+sudo apt-get install autoconf gettext libtool libjpeg9-dev libjpeg8-dev libjpeg62-turbo-dev
+autoreconf -vfi
+./configure
+make
+sudo make install
+
+then, to enable driver:
+sudo modprobe bcm2835-v4l2
+
+test with:
+v4l2-ctl --overlay=1

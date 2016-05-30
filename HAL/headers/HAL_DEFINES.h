@@ -35,6 +35,7 @@
 #define ERROR_MEMORY_MAP                    -120
 #define ERROR_DESTROY_SAMPLER               -121
 #define ERROR_INIT_SAMPLER                  -122
+#define ERROR_SAMPLE_IMAGE_OPENING          -123
 
 #define NUM_FRAMEBUFFERS                    2
 

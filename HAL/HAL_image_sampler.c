@@ -59,9 +59,15 @@ GLint capture_image(HAL_image_sampler* sampler){
         return ERROR_CURRENTLY_RETIRIEVING_FRAME;
     }
 
-    int outfd = open("out.img", O_RDWR);
+#if STORE_SAMPLE_IMAGE
+    GLint outfd = open(IMAGE_SAMPLE_NAME, O_RDWR);
+    if (outfd == -1){
+        errorlogger("Failed to open image sample file!");
+        return ERROR_SAMPLE_IMAGE_OPENING;
+    }
     write(outfd, sampler->buffer, buf.bytesused);
     close(outfd);
+#endif
 
     return 0;
 }
@@ -89,7 +95,7 @@ GLint init_mmap(HAL_image_sampler* sampler){
 
     sampler->buffer= mmap (NULL, buf.length, PROT_READ | PROT_WRITE, MAP_SHARED, sampler->driver_file_descriptor, buf.m.offset);
     printf("Length: %d\nAddress: %p\n", buf.length, sampler->buffer);
-    printf("Image Length: %d\n", buf.bytesused);
+    printf("Image size: %d\n", buf.bytesused);
 
     return 0;
 }
