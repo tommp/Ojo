@@ -5,7 +5,7 @@ EGLint init_window(HAL_Window* window){
 	int32_t success = 0;
 	success = graphics_get_display_size(0 /* LCD */, &window->window_width, &window->window_height);
 	if (success < 0 ){
-		return ERROR_WINDOW_INIT;
+        return ERROR_INIT_WINDOW;
 	}
 
 	window->dst_rect.x = 0;

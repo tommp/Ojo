@@ -2,7 +2,7 @@
 #define RENDERER_H
 
 /* Project includes */
-#include "DEFINES.h"
+#include "HAL_DEFINES.h"
 #include "HAL_window.h"
 /* ================ */
 
