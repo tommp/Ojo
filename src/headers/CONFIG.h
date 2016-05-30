@@ -4,10 +4,11 @@
 #include "HAL_DEFINES.h"
 
 //Configure these for the current platform
-#define IMAGE_SAMPLER           1001
-#define WINDOW_SYSTEM           2001
+#define IMAGE_SAMPLER           RBP_CSI
+#define WINDOW_SYSTEM           DISPMANX
 
 #define FOLDER_PATH             "/home/pi/Ojo/"
 #define IMAGE_SAMPLE_FOLDER     "samples/"
+#define ERROR_FILE_NAME         "errorlog.txt"
 
 #endif

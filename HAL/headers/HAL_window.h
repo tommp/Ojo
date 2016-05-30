@@ -4,9 +4,14 @@
 #include "HAL_DEFINES.h"
 #include "CONFIG.h"
 
+#include "errorlogger.h"
+
 #include "GLES2/gl2.h"
 #include "EGL/egl.h"
 #include "EGL/eglext.h"	
+
+#include <stdio.h>
+#include <stdlib.h>
 
 #if WINDOW_SYSTEM == DISPMANX
 #include "bcm_host.h"
@@ -15,7 +20,7 @@
 typedef struct HAL_Window{
 	uint32_t window_width;
 	uint32_t window_height;
-    EGLNativeWindowType native_window;
+	EGLNativeWindowType native_window;
 
 #if WINDOW_SYSTEM == DISPMANX
 	EGL_DISPMANX_WINDOW_T dispmanx_window;

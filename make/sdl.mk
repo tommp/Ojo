@@ -1,4 +1,0 @@
-
-SDL_LIB :=
-program_LIBRARIES += $(SDL_LIB)
-CFLAGS += -DWINDOW_SYSTEM=$(SDL)

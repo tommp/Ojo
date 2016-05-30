@@ -2,10 +2,14 @@
 
 EGLint init_window(HAL_Window* window){
 #if WINDOW_SYSTEM == DISPMANX
+	bcm_host_init();
+	printf("Initializing Dispmanx window...\n\n");
 	int32_t success = 0;
 	success = graphics_get_display_size(0 /* LCD */, &window->window_width, &window->window_height);
 	if (success < 0 ){
-        return ERROR_INIT_WINDOW;
+	      errorlogger("Failed to get display size!");
+	      printf("Failed to get display size %d!", window->window_width);
+	      return ERROR_INIT_WINDOW;
 	}
 
 	window->dst_rect.x = 0;
@@ -31,6 +35,7 @@ EGLint init_window(HAL_Window* window){
 
 	window->native_window = &window->dispmanx_window;
 	vc_dispmanx_update_submit_sync(window->dispman_update);
+	printf("Dispmanx windowinitialized!\n\n");
 #endif
 
 	return 0;
