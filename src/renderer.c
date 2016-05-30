@@ -29,6 +29,12 @@ EGLint init_renderer(Renderer* renderer){
             return ERROR_INIT_SURFACE;
         }
 
+        return_val = init_framebuffers(renderer);
+        if (return_val < 0){
+            errorlogger("Failed to initialize framebuffers!");
+            return ERROR_INIT_SURFACE;
+        }
+
         init_ogl();
 
 	return 0;

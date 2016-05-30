@@ -25,3 +25,13 @@ GLint check_ogl_error(){
 
     return retCode;
 }
+
+GLint xioctl(int fd, int request, void *arg){
+    int result;
+
+    do {
+        result = ioctl (fd, request, arg);
+    } while (result == -1 && EINTR == errno);
+
+    return result;
+}

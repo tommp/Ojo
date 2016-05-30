@@ -12,8 +12,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <sys/ioctl.h>
 
 const char* gl_error_string(GLenum err);
 GLint check_ogl_error();
-
+GLint xioctl(int fd, int request, void *arg);
 #endif

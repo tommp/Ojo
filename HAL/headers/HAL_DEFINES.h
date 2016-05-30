@@ -26,6 +26,15 @@
 #define ERROR_INIT_CONTEXT                  -111
 #define ERROR_INIT_SURFACE                  -112
 #define ERROR_DESTROY_RENDERER              -113
+#define ERROR_VIDEO_DRIVER                  -114
+#define ERROR_VIDEO_DRIVER_CAPTURE          -115
+#define ERROR_VIDEO_DRIVER_QUERY            -116
+#define ERROR_VIDEO_DRIVER_REQUEST          -117
+#define ERROR_OPENING_VIDEO_DEVICE          -118
+#define ERROR_CURRENTLY_RETIRIEVING_FRAME   -119
+#define ERROR_MEMORY_MAP                    -120
+#define ERROR_DESTROY_SAMPLER               -121
+#define ERROR_INIT_SAMPLER                  -122
 
 #define NUM_FRAMEBUFFERS                    2
 
