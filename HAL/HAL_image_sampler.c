@@ -9,13 +9,16 @@ GLint init_image_sampler(HAL_image_sampler* sampler){
         errorlogger("Could not open video device!");
         return ERROR_OPENING_VIDEO_DEVICE;
     }
-#if CONFIGURE_SETTINGS
+
+#if QUERY_CAPABILITIES
+    query_capabilities(sampler);
+#endif
+
     result = configure_settings(sampler);
     if (result < 0){
         errorlogger("Failed to configure initial settings!");
         return ERROR_CONFIGURE_SETTINGS;
     }
-#endif
 
     result = init_mmap(sampler);
     if (result < 0){
@@ -24,6 +27,14 @@ GLint init_image_sampler(HAL_image_sampler* sampler){
     }
 
     sampler->current_sample = 0;
+
+    printf("Sampling initial test image...\n\n");
+    result = capture_image(sampler);
+    if (result < 0){
+        errorlogger("Failed to sample test image!");
+        return ERROR_MEMORY_MAP;
+    }
+    printf("Sampling successful!\n\n");
 
     return 0;
 }
@@ -129,42 +140,45 @@ GLint init_mmap(HAL_image_sampler* sampler){
     return 0;
 }
 
+GLint query_capabilities(HAL_image_sampler* sampler){
+    struct v4l2_capability caps = {};
+    if (xioctl(sampler->driver_file_descriptor, VIDIOC_QUERYCAP, &caps) == -1){
+        errorlogger("Failed to query capabilities!");
+        return ERROR_VIDEO_DRIVER_QUERY;
+    }
+
+    printf( "Driver Caps:\n"
+            "  Driver: \"%s\"\n"
+            "  Card: \"%s\"\n"
+            "  Bus: \"%s\"\n"
+            "  Version: %d.%d\n"
+            "  Capabilities: %08x\n\n",
+            caps.driver,
+            caps.card,
+            caps.bus_info,
+            (caps.version>>16)&&0xff,
+            (caps.version>>24)&&0xff,
+            caps.capabilities);
+
+
+    struct v4l2_cropcap cropcap = {0};
+    cropcap.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    if (xioctl(sampler->driver_file_descriptor, VIDIOC_CROPCAP, &cropcap) == -1){
+        errorlogger("Failed to query cropping capabilities");
+        //return ERROR_VIDEO_DRIVER_QUERY;
+    }
+
+    printf( "Camera Cropping:\n"
+            "  Bounds: %dx%d+%d+%d\n"
+            "  Default: %dx%d+%d+%d\n"
+            "  Aspect: %d/%d\n\n",
+            cropcap.bounds.width, cropcap.bounds.height, cropcap.bounds.left, cropcap.bounds.top,
+            cropcap.defrect.width, cropcap.defrect.height, cropcap.defrect.left, cropcap.defrect.top,
+            cropcap.pixelaspect.numerator, cropcap.pixelaspect.denominator);
+    return 0;
+}
+
 GLint configure_settings(HAL_image_sampler* sampler){
-        struct v4l2_capability caps = {};
-        if (xioctl(sampler->driver_file_descriptor, VIDIOC_QUERYCAP, &caps) == -1){
-            errorlogger("Failed to query capabilities!");
-            return ERROR_VIDEO_DRIVER_QUERY;
-        }
-
-        printf( "Driver Caps:\n"
-                "  Driver: \"%s\"\n"
-                "  Card: \"%s\"\n"
-                "  Bus: \"%s\"\n"
-                "  Version: %d.%d\n"
-                "  Capabilities: %08x\n\n",
-                caps.driver,
-                caps.card,
-                caps.bus_info,
-                (caps.version>>16)&&0xff,
-                (caps.version>>24)&&0xff,
-                caps.capabilities);
-
-
-        struct v4l2_cropcap cropcap = {0};
-        cropcap.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-        if (xioctl(sampler->driver_file_descriptor, VIDIOC_CROPCAP, &cropcap) == -1){
-            errorlogger("Failed to query cropping capabilities");
-            //return ERROR_VIDEO_DRIVER_QUERY;
-        }
-
-        printf( "Camera Cropping:\n"
-                "  Bounds: %dx%d+%d+%d\n"
-                "  Default: %dx%d+%d+%d\n"
-                "  Aspect: %d/%d\n\n",
-                cropcap.bounds.width, cropcap.bounds.height, cropcap.bounds.left, cropcap.bounds.top,
-                cropcap.defrect.width, cropcap.defrect.height, cropcap.defrect.left, cropcap.defrect.top,
-                cropcap.pixelaspect.numerator, cropcap.pixelaspect.denominator);
-
         int support_grbg10 = 0;
 
         struct v4l2_fmtdesc fmtdesc = {0};
@@ -189,9 +203,9 @@ GLint configure_settings(HAL_image_sampler* sampler){
 
         struct v4l2_format fmt = {0};
         fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-        fmt.fmt.pix.width = 752;
-        fmt.fmt.pix.height = 480;
-        fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_SGRBG10;
+        fmt.fmt.pix.width = SAMPLE_WIDTH;
+        fmt.fmt.pix.height = SAMPLE_HEIGHT;
+        fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_RGB24;
         fmt.fmt.pix.field = V4L2_FIELD_NONE;
 
         if (xioctl(sampler->driver_file_descriptor, VIDIOC_S_FMT, &fmt) == -1){
@@ -209,6 +223,11 @@ GLint configure_settings(HAL_image_sampler* sampler){
                 fmt.fmt.pix.height,
                 fourcc,
                 fmt.fmt.pix.field);
+
+        sampler->buffer_width = fmt.fmt.pix.width;
+        sampler->buffer_height = fmt.fmt.pix.height;
+
+        printf("Final sampler resolution set to: %dx%d\n\n", sampler->buffer_width, sampler->buffer_height);
 
         return 0;
 }

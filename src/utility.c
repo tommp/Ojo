@@ -61,6 +61,7 @@ char* read_data_from_file(const char *filename){
 
    fseek(handler, 0, SEEK_END);
    string_size = ftell(handler);
+
    rewind(handler);
    buffer = (char*) malloc(sizeof(char) * (string_size + 1) );
    read_size = fread(buffer, sizeof(char), string_size, handler);
@@ -72,5 +73,12 @@ char* read_data_from_file(const char *filename){
        return NULL;
    }
 
+   //printf("Data loaded:\n%s\n\n", buffer);
+
    return buffer;
+}
+
+void wait_for_keypress(){
+    printf("Press enter to continue!\n");
+    getchar();
 }

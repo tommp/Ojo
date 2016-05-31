@@ -19,8 +19,12 @@
 #include <unistd.h>
 
 typedef struct Renderer{
-	uint32_t screen_width;
-   	uint32_t screen_height;
+        uint32_t buffer_width;
+        uint32_t buffer_height;
+
+        EGLint num_configs;
+        EGLConfig* configs;
+        EGLConfig config;
 
    	HAL_Window window;
 
@@ -28,9 +32,7 @@ typedef struct Renderer{
 	EGLSurface surface;
 	EGLContext context;
 
-	EGLint num_config;
-	EGLConfig config;
-
+	GLuint quad_VBO;
 	GLuint* framebuffers;
 }Renderer;
 
@@ -38,10 +40,16 @@ EGLint init_renderer(Renderer* renderer);
 EGLint destroy_renderer(Renderer* renderer);
 
 EGLint init_display(Renderer* renderer);
+EGLint bind_api();
 EGLint init_context(Renderer* renderer);
 EGLint init_surface(Renderer* renderer);
 
-GLint init_ogl();
+GLint init_ogl(Renderer* renderer);
 GLint init_framebuffers(Renderer* renderer);
+GLint init_quad(Renderer* renderer);
+
+GLint print_configs(Renderer* renderer, EGLint num_configs);
+
+GLint render_quad(Renderer* renderer);
 
 #endif

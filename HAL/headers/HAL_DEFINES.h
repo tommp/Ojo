@@ -9,7 +9,7 @@
 
 
 //General vars
-#define CLEARCOLOR                          0.0, 0.0, 0.0, 1.0
+#define CLEARCOLOR                          1.0, 0.0, 0.0, 1.0
 
 #define ERROR_INIT_RENDERER                 -1
 
@@ -51,6 +51,11 @@
 #define ERROR_SHADER_LINK                   -136
 #define ERROR_INIT_SHADER                   -137
 #define ERROR_SHADER_COMPILE                -138
+#define ERROR_SHADER_CREATION               -139
+#define ERROR_BIND_API                      -140
+#define ERROR_INIT_QUAD                     -141
+#define ERROR_DRAW_QUAD                     -142
+#define ERROR_INIT_TEXTURE                  -143
 
 #define NUM_FRAMEBUFFERS                    2
 
@@ -58,7 +63,10 @@
 #define SAMPLE_TEXTURE                      0
 
 //Shader programs
-#define BASE_VERTEX_SHADER                  "quad.vs"
-#define BLUR_FRAG_SHADER                    "blur.fs"
+#define BASE_VS                            "quad.vs"
+
+#define TEST_FS                            "test.fs"
+#define VERTICAL_BLUR_FS                   "vertical_blur.fs"
+#define HORIZONTAL_BLUR_FS                 "horizontal_blur.fs"
 
 #endif

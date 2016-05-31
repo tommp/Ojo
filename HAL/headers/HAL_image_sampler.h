@@ -18,8 +18,6 @@
 #include "CONFIG.h"
 
 #include "GLES2/gl2.h"
-#include "EGL/egl.h"
-#include "EGL/eglext.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,6 +38,7 @@ GLint destroy_image_sampler(HAL_image_sampler* sampler);
 GLint sample_grayscale_image(HAL_image_sampler* sampler);
 GLint init_mmap(HAL_image_sampler* sampler);
 GLint capture_image(HAL_image_sampler* sampler);
+GLint query_capabilities(HAL_image_sampler* sampler);
 GLint configure_settings(HAL_image_sampler* sampler);
 
 #endif

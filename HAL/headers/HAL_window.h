@@ -8,7 +8,7 @@
 
 #include "GLES2/gl2.h"
 #include "EGL/egl.h"
-#include "EGL/eglext.h"	
+#include "EGL/eglext.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,6 +20,8 @@
 typedef struct HAL_Window{
 	uint32_t window_width;
 	uint32_t window_height;
+	uint32_t screen_width;
+	uint32_t screen_height;
 	EGLNativeWindowType native_window;
 
 #if WINDOW_SYSTEM == DISPMANX

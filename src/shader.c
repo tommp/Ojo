@@ -40,8 +40,13 @@ GLuint create_shader(const char* filename, GLenum type){
     }
 
     GLuint res = glCreateShader(type);
-    const GLchar* sources[] = {OPENGL_VERSION, source};
-    glShaderSource(res, 2, sources, NULL);
+    if(res == 0){
+        errorlogger("Failed to create shader!");
+        return 0;
+    }
+
+    const GLchar* sources[] = {source};
+    glShaderSource(res, 1, sources, NULL);
 
     free((void*)source);
 
@@ -62,6 +67,10 @@ GLint load_shader_from_file(Shader* shader, char* vertex_shader_name, char* frag
     char* vertex_shader_path = concat(VERTEX_SHADER_PATH, vertex_shader_name);
     char* fragment_shader_path = concat(FRAGMENT_SHADER_PATH, fragment_shader_name);
 
+    printf("Loading shaders from paths: \n\n");
+    printf("    VS path: %s\n\n", vertex_shader_path);
+    printf("    FS path: %s\n\n", fragment_shader_path);
+
     /* create the shaders */
     GLuint vertex_shader = create_shader(vertex_shader_path, GL_VERTEX_SHADER);
     if(vertex_shader == 0) {
@@ -75,21 +84,38 @@ GLint load_shader_from_file(Shader* shader, char* vertex_shader_name, char* frag
         return ERROR_FRAGMENT_SHADER_CREATE;
     }
 
+
     free(vertex_shader_path);
     free(fragment_shader_path);
 
     /* Create program */
     shader->program = glCreateProgram();
+    if(!shader->program){
+        errorlogger("Failed to create shader program!");
+        return ERROR_SHADER_CREATION;
+    }
+
 
     /* Attach the shaders */
     glAttachShader(shader->program, vertex_shader);
     glAttachShader(shader->program, fragment_shader);
 
+    if(check_ogl_error()){
+        errorlogger("Failed to attatch shaders!");
+        return ERROR_SHADER_CREATION;
+    }
+
     /* Link the program */
-    GLint success;
+    GLint success = 1;
     glLinkProgram(shader->program);
+
+    if(check_ogl_error()){
+        errorlogger("Failed to link program!");
+        return ERROR_SHADER_LINK;
+    }
+
     glGetProgramiv(shader->program, GL_LINK_STATUS, &success);
-    if(!success){
+    if(success == 0){
         print_log(shader->program);
         return ERROR_SHADER_LINK;
     }
@@ -102,6 +128,8 @@ GLint load_shader_from_file(Shader* shader, char* vertex_shader_name, char* frag
         errorlogger("Failed to delete bound shaders!");
         return ERROR_DELETE_SHADER;
     }
+
+    printf("Shaders successfully loaded!\n\n");
 
     return 0;
 }
@@ -147,7 +175,7 @@ GLint print_log(GLuint object){
     }
 
     errorlogger("Shader compilation failed!");
-    printf("Shader error: %s\n\n", logger);
+    printf("================================\nSHADER ERROR:\n\n %s\n================================\n\n", logger);
     free(logger);
 
     return 0;

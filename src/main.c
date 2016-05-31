@@ -22,28 +22,36 @@ int main(int argc, char* argv[]) {
     }
     printf("Image sampler initialized!\n\n");
 
-    Shader blur_shader;
-    return_val = init_shader(&blur_shader, BASE_VERTEX_SHADER, BLUR_FRAG_SHADER);
+    Shader test_shader;
+    return_val = init_shader(&test_shader, BASE_VS, TEST_FS);
     if (return_val < 0){
         errorlogger("Failed to initialize blur shader!");
         return ERROR_INIT_SHADER;
     }
 
+    Texture sample_texture;
+    return_val = init_texture(&sample_texture, &sampler);
+    if (return_val < 0){
+        errorlogger("Failed to initialize sample texture!");
+        return ERROR_INIT_TEXTURE;
+    }
 
     //Main Loop
     /* ================================================ */
     printf("Main loop running!\n\n");
+    use_shader(&test_shader);
+    use_texture(&sample_texture, 0, &test_shader, 0);
     int i;
-    for(i = 0; i < 200; ++i){
+    for(i = 0; i < 40; ++i){
         capture_image(&sampler);
+        update_texture(&sample_texture, &sampler);
+        render_quad(&renderer);
     }
 
-    GLuint running = 1;
-    while(running){
-        break;
-    }
     printf("Exiting main loop!\n\n");
     /* ================================================ */
+
+    wait_for_keypress();
 
     printf("Cleaning up...\n\n");
     return_val = destroy_renderer(&renderer);

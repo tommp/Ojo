@@ -20,5 +20,6 @@ GLint check_ogl_error();
 GLint xioctl(int fd, int request, void *arg);
 char* concat(char *s1, char *s2);
 char* read_data_from_file(const char *filename);
+void wait_for_keypress();
 
 #endif

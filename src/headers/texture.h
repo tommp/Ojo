@@ -19,5 +19,6 @@ typedef struct Texture{
 GLint init_texture(Texture* texture, HAL_image_sampler* sampler);
 GLint destroy_texture(Texture* texture);
 GLint use_texture(Texture* texture, GLuint texture_unit, Shader* shader, GLuint uniform_index);
+GLint update_texture(Texture* texture, HAL_image_sampler* sampler);
 
 #endif
