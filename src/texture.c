@@ -33,10 +33,10 @@ GLint destroy_texture(Texture* texture){
     return 0;
 }
 
-GLint use_texture(Texture* texture, GLuint texture_unit, Shader* shader, Char* uniform_name){
+GLint use_texture(Texture* texture, GLuint texture_unit, Shader* shader, GLuint uniform_index){
     glActiveTexture(GL_TEXTURE0 + texture_unit);
     glBindTexture(GL_TEXTURE_2D, texture->texture);
-    glUniform1i(load_uniform_location(shader, uniform_name), texture_unit);
+    glUniform1i(load_uniform_location(shader, uniform_index), texture_unit);
 
     GLint error = check_ogl_error();
     if (error < 0){

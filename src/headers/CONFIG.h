@@ -12,6 +12,8 @@
 #define CONFIGURE_SETTINGS      0
 #define MAX_UNIFORMS            10
 
+#define OPENGL_VERSION          "#200"
+
 #define FOLDER_PATH             "/home/pi/Ojo/"
 #define IMAGE_SAMPLE_FOLDER     "samples/"
 #define IMAGE_SAMPLE_NAME       "sample.jpeg"

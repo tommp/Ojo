@@ -19,5 +19,6 @@ const char* gl_error_string(GLenum err);
 GLint check_ogl_error();
 GLint xioctl(int fd, int request, void *arg);
 char* concat(char *s1, char *s2);
+char* read_data_from_file(const char *filename);
 
 #endif

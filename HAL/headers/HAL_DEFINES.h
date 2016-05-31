@@ -42,7 +42,17 @@
 #define ERROR_GENERATE_TEXTURE              -127
 #define ERROR_DESTROY_TEXTURE               -128
 #define ERROR_USE_TEXTURE                   -129
+#define ERROR_UNIFORM_INIT                  -130
+#define ERROR_SHADER_LOG                    -131
+#define ERROR_LOAD_SHADER_FILE              -132
 
 #define NUM_FRAMEBUFFERS                    2
+
+//Shader uniforms
+#define SAMPLE_TEXTURE                      0
+
+//Shader programs
+#define BASE_VERTEX_SHADER                  "quad.vs"
+#define BLUR_FRAG_SHADER                    "blur.fs"
 
 #endif

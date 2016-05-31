@@ -1,9 +1,18 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include "CONFIG.h"
+#include "HAL_DEFINES.h"
+#include "errorlogger.h"
+#include "utility.h"
+
 #include "GLES2/gl2.h"
 #include "EGL/egl.h"
 #include "EGL/eglext.h"
+
+#include <stdio.h>
+#include <string.h>
+
 
 typedef struct Shader{
     GLuint program;
@@ -14,7 +23,12 @@ typedef struct Shader{
 
 }Shader;
 
+GLint init_shader(Shader* shader);
+GLint init_uniforms(Shader* shader);
+GLint create_shader(const char* filename, GLenum type);
 GLint use_shader(Shader* shader);
-GLint load_uniform_location(Shader* shader, char* uniform_name);
+GLint load_uniform_location(Shader* shader, GLuint uniform_index);
+GLint print_log(GLuint object);
+
 
 #endif
