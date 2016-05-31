@@ -12,7 +12,7 @@
 #define CONFIGURE_SETTINGS      0
 #define MAX_UNIFORMS            10
 
-#define OPENGL_VERSION          "#200"
+#define OPENGL_VERSION          "#version 100"
 
 #define FOLDER_PATH             "/home/pi/Ojo/"
 #define VERTEX_SHADER_PATH      "/home/pi/Ojo/src/shaders/vertex/"

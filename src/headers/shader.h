@@ -23,9 +23,9 @@ typedef struct Shader{
 
 }Shader;
 
-GLint init_shader(Shader* shader);
+GLint init_shader(Shader* shader, char* vertex_shader_name, char* fragment_shader_name);
 GLint init_uniforms(Shader* shader);
-GLint create_shader(const char* filename, GLenum type);
+GLuint create_shader(const char* filename, GLenum type);
 GLint use_shader(Shader* shader);
 GLint load_uniform_location(Shader* shader, GLuint uniform_index);
 GLint print_log(GLuint object);

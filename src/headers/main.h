@@ -6,6 +6,8 @@
 
 #include "errorlogger.h"
 #include "renderer.h"
+#include "shader.h"
+#include "texture.h"
 #include "HAL_image_sampler.h"
 
 #include "GLES2/gl2.h"

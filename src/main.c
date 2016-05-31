@@ -22,6 +22,14 @@ int main(int argc, char* argv[]) {
     }
     printf("Image sampler initialized!\n\n");
 
+    Shader blur_shader;
+    return_val = init_shader(&blur_shader, BASE_VERTEX_SHADER, BLUR_FRAG_SHADER);
+    if (return_val < 0){
+        errorlogger("Failed to initialize blur shader!");
+        return ERROR_INIT_SHADER;
+    }
+
+
     //Main Loop
     /* ================================================ */
     printf("Main loop running!\n\n");

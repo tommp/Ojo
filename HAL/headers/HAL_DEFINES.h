@@ -49,6 +49,8 @@
 #define ERROR_VERTEX_SHADER_CREATE          -134
 #define ERROR_DELETE_SHADER                 -135
 #define ERROR_SHADER_LINK                   -136
+#define ERROR_INIT_SHADER                   -137
+#define ERROR_SHADER_COMPILE                -138
 
 #define NUM_FRAMEBUFFERS                    2
 

@@ -1,12 +1,18 @@
 #include "shader.h"
 
-GLint init_shader(Shader* shader){
+GLint init_shader(Shader* shader, char* vertex_shader_name, char* fragment_shader_name){
     GLint result;
 
     result = init_uniforms(shader);
     if (result < 0){
         errorlogger("Failed to initialize uniforms!");
         return ERROR_UNIFORM_INIT;
+    }
+
+    result = load_shader_from_file(shader, vertex_shader_name, fragment_shader_name);
+    if (result < 0){
+        errorlogger("Failed to load shader!");
+        return ERROR_LOAD_SHADER_FILE;
     }
 
     return 0;
@@ -26,11 +32,11 @@ GLint init_uniforms(Shader* shader){
     return 0;
 }
 
-GLint create_shader(const char* filename, GLenum type){
+GLuint create_shader(const char* filename, GLenum type){
     char* source = read_data_from_file(filename);
     if (source == NULL) {
         errorlogger("Could not open shader source file!");
-        return ERROR_LOAD_SHADER_FILE;
+        return 0;
     }
 
     GLuint res = glCreateShader(type);
