@@ -27,7 +27,6 @@ GLint init_uniforms(Shader* shader){
 }
 
 GLint create_shader(const char* filename, GLenum type){
-
     char* source = read_data_from_file(filename);
     if (source == NULL) {
         errorlogger("Could not open shader source file!");
@@ -51,6 +50,54 @@ GLint create_shader(const char* filename, GLenum type){
     }
 
     return res;
+}
+
+GLint load_shader_from_file(Shader* shader, char* vertex_shader_name, char* fragment_shader_name){
+    char* vertex_shader_path = concat(VERTEX_SHADER_PATH, vertex_shader_name);
+    char* fragment_shader_path = concat(FRAGMENT_SHADER_PATH, fragment_shader_name);
+
+    /* create the shaders */
+    GLuint vertex_shader = create_shader(vertex_shader_path, GL_VERTEX_SHADER);
+    if(vertex_shader == 0) {
+        errorlogger("Failed to create vertex shader!");
+        return ERROR_VERTEX_SHADER_CREATE;
+    }
+
+    GLuint fragment_shader = create_shader(fragment_shader_path, GL_FRAGMENT_SHADER);
+    if(fragment_shader == 0) {
+        errorlogger("Failed to create fragment_shader!");
+        return ERROR_FRAGMENT_SHADER_CREATE;
+    }
+
+    free(vertex_shader_path);
+    free(fragment_shader_path);
+
+    /* Create program */
+    shader->program = glCreateProgram();
+
+    /* Attach the shaders */
+    glAttachShader(shader->program, vertex_shader);
+    glAttachShader(shader->program, fragment_shader);
+
+    /* Link the program */
+    GLint success;
+    glLinkProgram(shader->program);
+    glGetProgramiv(shader->program, GL_LINK_STATUS, &success);
+    if(!success){
+        print_log(shader->program);
+        return ERROR_SHADER_LINK;
+    }
+
+    /* Delete the linked shaders */
+    glDeleteShader(vertex_shader);
+    glDeleteShader(fragment_shader);
+
+    if(check_ogl_error()){
+        errorlogger("Failed to delete bound shaders!");
+        return ERROR_DELETE_SHADER;
+    }
+
+    return 0;
 }
 
 GLint use_shader(Shader* shader){

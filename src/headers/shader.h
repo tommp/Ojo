@@ -29,6 +29,7 @@ GLint create_shader(const char* filename, GLenum type);
 GLint use_shader(Shader* shader);
 GLint load_uniform_location(Shader* shader, GLuint uniform_index);
 GLint print_log(GLuint object);
+GLint load_shader_from_file(Shader* shader, char* vertex_shader, char* fragment_shader);
 
 
 #endif

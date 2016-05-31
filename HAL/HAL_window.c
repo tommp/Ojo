@@ -35,7 +35,7 @@ EGLint init_window(HAL_Window* window){
 
 	window->native_window = &window->dispmanx_window;
 	vc_dispmanx_update_submit_sync(window->dispman_update);
-	printf("Dispmanx windowinitialized!\n\n");
+	printf("Dispmanx windo initialized!\n\n");
 #endif
 
 	return 0;

@@ -15,6 +15,8 @@
 #define OPENGL_VERSION          "#200"
 
 #define FOLDER_PATH             "/home/pi/Ojo/"
+#define VERTEX_SHADER_PATH      "/home/pi/Ojo/src/shaders/vertex/"
+#define FRAGMENT_SHADER_PATH    "/home/pi/Ojo/src/shaders/fragment/"
 #define IMAGE_SAMPLE_FOLDER     "samples/"
 #define IMAGE_SAMPLE_NAME       "sample.jpeg"
 #define ERROR_FILE_NAME         "errorlog.txt"

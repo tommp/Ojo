@@ -45,6 +45,10 @@
 #define ERROR_UNIFORM_INIT                  -130
 #define ERROR_SHADER_LOG                    -131
 #define ERROR_LOAD_SHADER_FILE              -132
+#define ERROR_FRAGMENT_SHADER_CREATE        -133
+#define ERROR_VERTEX_SHADER_CREATE          -134
+#define ERROR_DELETE_SHADER                 -135
+#define ERROR_SHADER_LINK                   -136
 
 #define NUM_FRAMEBUFFERS                    2
 
