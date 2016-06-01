@@ -26,11 +26,12 @@
 #define IMAGE_SAMPLE_NAME       "sample.jpeg"
 #define ERROR_FILE_NAME         "errorlog.txt"
 
-#define INPUT_RUNNING           'r'
 #define INPUT_QUITTING          'q'
-#define INPUT_DISPLAY_HARRIS    'h'
-#define INPUT_DISPLAY_RAW       'g'
-
+#define INPUT_FREEZE            'w'
+#define INPUT_RUNNING           'e'
+#define INPUT_DISPLAY_RAW       'a'
+#define INPUT_DISPLAY_HARRIS    's'
+#define INPUT_DISPLAY_FEATURES  'd'
 
 #define RENDERER_RED_SIZE       8
 #define RENDERER_GREEN_SIZE     8

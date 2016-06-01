@@ -56,7 +56,6 @@ EGLint init_renderer(Renderer* renderer){
 }
 
 EGLint destroy_renderer(Renderer* renderer){
-    free(renderer->framebuffers);
     free(renderer->configs);
     return 0;
 }
@@ -177,9 +176,9 @@ GLint init_ogl(Renderer* renderer){
 }
 
 GLint init_framebuffers(Renderer* renderer){
-    renderer->framebuffers = malloc(sizeof(GLuint) * NUM_FRAMEBUFFERS);
-    glGenFramebuffers(2, renderer->framebuffers);
+    glGenFramebuffers(2, &(renderer->framebuffers[0]));
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    renderer->last_framebuffer = 1;
 
     return 0;
 }
@@ -220,6 +219,48 @@ GLint init_quad(Renderer* renderer){
 	return 0;
 }
 
+GLint render_quad_offscreen(Renderer* renderer){
+    if (renderer->last_framebuffer == NUM_FRAMEBUFFERS){
+        glBindFramebuffer(GL_FRAMEBUFFER, 1);
+        renderer->last_framebuffer = 1;
+    }
+    else{
+        renderer->last_framebuffer += 1;
+        glBindFramebuffer(GL_FRAMEBUFFER, renderer->last_framebuffer - 1);
+
+    }
+
+    GLint result = render_quad(renderer);
+    if (result < 0){
+        errorlogger("Failed to render quad!");
+        return ERROR_DRAW_QUAD;
+    }
+
+    return 0;
+}
+
+GLint bind_framebuffer_texture(Renderer* renderer, GLuint texture_unit, Shader* shader, GLuint uniform_index){
+        glActiveTexture(GL_TEXTURE0 + texture_unit);
+        glBindTexture(GL_TEXTURE_2D, renderer->color_buffers[renderer->last_framebuffer - 1]);
+        glUniform1i(load_uniform_location(shader, uniform_index), texture_unit);
+
+        GLint error = check_ogl_error();
+        if (error < 0){
+            errorlogger("Failed to use texture!");
+            return ERROR_USE_TEXTURE;
+        }
+    return 0;
+}
+
+GLint render_quad_to_screen(Renderer* renderer){
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    GLint result = render_quad(renderer);
+    if (result < 0){
+        errorlogger("Failed to render quad!");
+        return ERROR_DRAW_QUAD;
+    }
+}
+
 GLint render_quad(Renderer* renderer){
     glClear(GL_COLOR_BUFFER_BIT);
     glBindBuffer(GL_ARRAY_BUFFER, renderer->quad_VBO);
@@ -233,7 +274,7 @@ GLint render_quad(Renderer* renderer){
     eglSwapBuffers(renderer->display, renderer->surface);
 
     if(check_ogl_error()){
-        errorlogger("Failed to draw quad");
+        errorlogger("Failed to render quad");
         return ERROR_DRAW_QUAD;
     }
     return 0;

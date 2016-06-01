@@ -73,5 +73,6 @@
 #define HORIZONTAL_BLUR_FS                 "horizontal_blur.fs"
 #define HARRIS_GRADIENT                    "harris_gradient.fs"
 #define GRAYSCALE_CONVERTER                "grayscale_converter.fs"
+#define FEATURE_DETECTOR                   "feature_detector.fs"
 
 #endif

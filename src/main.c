@@ -29,7 +29,6 @@ int main(int argc, char* argv[]) {
         errorlogger("Failed to initialize raw shader!");
         return ERROR_INIT_SHADER;
     }
-    printf("Shaders initialized!\n\n");
 
     Shader hg_shader;
     return_val = init_shader(&hg_shader, BASE_VS, HARRIS_GRADIENT);
@@ -38,7 +37,14 @@ int main(int argc, char* argv[]) {
         return ERROR_INIT_SHADER;
     }
 
-    Shader* current_shader = &raw_shader;
+    Shader fd_shader;
+    return_val = init_shader(&fd_shader, BASE_VS, FEATURE_DETECTOR);
+    if (return_val < 0){
+        errorlogger("Failed to initialize feature detector shader!");
+        return ERROR_INIT_SHADER;
+    }
+    printf("Shaders initialized!\n\n");
+
 
     Texture sample_texture;
     return_val = init_texture(&sample_texture, &sampler);
@@ -69,32 +75,40 @@ int main(int argc, char* argv[]) {
     GLchar state = INPUT_DISPLAY_RAW;
     while(state != INPUT_QUITTING){
         read_state(&controller, &state);
+
+        restart_timer(&looptimer);
+        capture_image(&sampler);
+        sample_time = return_timediff(&looptimer);
+
+        restart_timer(&looptimer);
         switch(state){
             case INPUT_DISPLAY_RAW:{
-                current_shader = &raw_shader;
-                use_shader(current_shader);
-                use_texture(&sample_texture, 0, current_shader, 0);
+                use_shader(&raw_shader);
+                use_texture(&sample_texture, 0, &raw_shader, 0);
+                update_texture(&sample_texture, &sampler);
+                render_quad(&renderer);
                 break;
             }
             case INPUT_DISPLAY_HARRIS:{
-                current_shader = &hg_shader;
-                use_shader(current_shader);
-                upload_buffer_size(&renderer, current_shader);
-                use_texture(&sample_texture, 0, current_shader, 0);
+                use_shader(&hg_shader);
+                use_texture(&sample_texture, 0, &hg_shader, 0);
+                upload_buffer_size(&renderer, &hg_shader);
+                update_texture(&sample_texture, &sampler);
+                render_quad(&renderer);
+                break;
+            }
+            case INPUT_DISPLAY_FEATURES:{
+                use_shader(&hg_shader);
+                upload_buffer_size(&renderer, &hg_shader);
+                use_texture(&sample_texture, 0, &hg_shader, 0);
+                update_texture(&sample_texture, &sampler);
+                render_quad(&renderer);
                 break;
             }
             default:{
                 continue;
             }
         }
-
-        restart_timer(&looptimer);
-        capture_image(&sampler);
-        sample_time = return_timediff(&looptimer);
-        restart_timer(&looptimer);
-
-        update_texture(&sample_texture, &sampler);
-        render_quad(&renderer);
         rendering_time = return_timediff(&looptimer);
 
         printf("Image sampled in: %.3ld ms, Rendered in: %.3ld ms, Total loop time: %.3ld ms  \r", sample_time, rendering_time, sample_time + rendering_time);
