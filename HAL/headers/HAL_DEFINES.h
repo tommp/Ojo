@@ -58,8 +58,9 @@
 #define ERROR_INIT_TEXTURE                  -143
 #define ERROR_INIT_CONTROLLER               -144
 #define ERROR_UPLOAD_SCREEN_SIZE            -145
+#define ERROR_INIT_FRAMEBUFFERS             -146
 
-#define NUM_FRAMEBUFFERS                    2
+#define NUM_FRAMEBUFFERS                    4
 
 //Shader uniforms
 #define SAMPLE_TEXTURE                      0
@@ -74,5 +75,8 @@
 #define HARRIS_GRADIENT                    "harris_gradient.fs"
 #define GRAYSCALE_CONVERTER                "grayscale_converter.fs"
 #define FEATURE_DETECTOR                   "feature_detector.fs"
+#define FEATURE_FILTER                     "feature_filter.fs"
+#define CALC_MEDIAN                        "calc_median.fs"
+#define CALC_VARIANCE                      "calc_variance.fs"
 
 #endif
