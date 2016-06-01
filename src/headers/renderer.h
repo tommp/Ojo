@@ -6,6 +6,7 @@
 
 #include "errorlogger.h"
 #include "utility.h"
+#include "shader.h"
 
 #include "GLES2/gl2.h"
 #include "EGL/egl.h"
@@ -49,6 +50,7 @@ GLint init_framebuffers(Renderer* renderer);
 GLint init_quad(Renderer* renderer);
 
 GLint print_configs(Renderer* renderer, EGLint num_configs);
+GLint upload_buffer_size(Renderer* renderer, Shader* shader);
 
 GLint render_quad(Renderer* renderer);
 

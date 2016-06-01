@@ -68,16 +68,17 @@ GLint capture_image(HAL_image_sampler* sampler){
         return ERROR_VIDEO_DRIVER_CAPTURE;
     }
 
-    fd_set fds;
+    //For some reason this bugs out
+   /* fd_set fds;
     FD_ZERO(&fds);
     FD_SET(sampler->driver_file_descriptor, &fds);
     struct timeval tv = {0};
-    tv.tv_sec = TV_TIME;
+    tv.tv_sec = SELECT_TIMEOUT_TIME;
     GLint result = select(sampler->driver_file_descriptor+1, &fds, NULL, NULL, &tv);
     if(result == -1){
-        errorlogger("No frame availiable, waiting...");
-        return ERROR_VIDEO_DRIVER_CAPTURE;
-    }
+        errorlogger("No frame availiable...");
+        return ERROR_VIDEO_DRIVER_REQUEST;
+    }*/
 
     if(xioctl(sampler->driver_file_descriptor, VIDIOC_DQBUF, &buf) == -1){
         errorlogger("Currently retrieving frame!");

@@ -8,6 +8,7 @@
 #include "renderer.h"
 #include "shader.h"
 #include "texture.h"
+#include "input_controller.h"
 #include "HAL_image_sampler.h"
 
 #include "GLES2/gl2.h"
@@ -17,5 +18,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <pthread.h>
 
 #endif

@@ -293,3 +293,16 @@ GLint print_configs(Renderer* renderer, EGLint num_configs){
     }
     return 0;
 }
+
+GLint upload_buffer_size(Renderer* renderer, Shader* shader){
+    //glUniform1i(load_uniform_location(shader, INV_BUFFER_WIDTH), 1.0 / renderer->buffer_width);
+    //glUniform1i(load_uniform_location(shader, INV_BUFFER_HEIGHT), 1.0 / renderer->buffer_height);
+
+    glUniform2f(load_uniform_location(shader, INV_BUFFER_SIZE), 1.0 / renderer->buffer_width, 1.0 / renderer->buffer_height);
+    GLint error = check_ogl_error();
+    if (error < 0){
+        errorlogger("Failed to upload screen size!");
+        return ERROR_UPLOAD_SCREEN_SIZE;
+    }
+    return 0;
+}

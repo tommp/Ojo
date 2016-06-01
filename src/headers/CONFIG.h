@@ -8,13 +8,13 @@
 #define WINDOW_SYSTEM           DISPMANX
 #define STORE_SAMPLE_IMAGE      0
 #define MAX_NUM_SAMPLES         50
-#define TV_TIME                 2
+#define SELECT_TIMEOUT_TIME     7000
 #define QUERY_CAPABILITIES      1
 #define MAX_UNIFORMS            10
 #define WINDOW_SCALE            2
 
-#define SAMPLE_WIDTH            1920
-#define SAMPLE_HEIGHT           1200
+#define SAMPLE_WIDTH            640
+#define SAMPLE_HEIGHT           480
 
 #define OPENGL_VERSION          "#version 100\n"
 #define PRINT_EGL_CONFIGS       0
@@ -25,6 +25,12 @@
 #define IMAGE_SAMPLE_FOLDER     "samples/"
 #define IMAGE_SAMPLE_NAME       "sample.jpeg"
 #define ERROR_FILE_NAME         "errorlog.txt"
+
+#define INPUT_RUNNING           'r'
+#define INPUT_QUITTING          'q'
+#define INPUT_DISPLAY_HARRIS    'h'
+#define INPUT_DISPLAY_RAW       'g'
+
 
 #define RENDERER_RED_SIZE       8
 #define RENDERER_GREEN_SIZE     8

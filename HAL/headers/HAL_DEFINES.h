@@ -56,17 +56,22 @@
 #define ERROR_INIT_QUAD                     -141
 #define ERROR_DRAW_QUAD                     -142
 #define ERROR_INIT_TEXTURE                  -143
+#define ERROR_INIT_CONTROLLER               -144
+#define ERROR_UPLOAD_SCREEN_SIZE            -145
 
 #define NUM_FRAMEBUFFERS                    2
 
 //Shader uniforms
 #define SAMPLE_TEXTURE                      0
+#define INV_BUFFER_SIZE                     1
 
 //Shader programs
 #define BASE_VS                            "quad.vs"
 
-#define TEST_FS                            "test.fs"
+#define RAW_FS                             "raw.fs"
 #define VERTICAL_BLUR_FS                   "vertical_blur.fs"
 #define HORIZONTAL_BLUR_FS                 "horizontal_blur.fs"
+#define HARRIS_GRADIENT                    "harris_gradient.fs"
+#define GRAYSCALE_CONVERTER                "grayscale_converter.fs"
 
 #endif
