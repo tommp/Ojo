@@ -9,7 +9,7 @@
 #include "shader.h"
 #include "texture.h"
 #include "input_controller.h"
-#include "HAL_image_sampler.h"
+#include "timer.h"
 
 #include "GLES2/gl2.h"
 #include "EGL/egl.h"

@@ -44,7 +44,7 @@ void* handle_input(void* controller){
         GLchar input = getchar();
         if (input != '\n'){
             update_state(target, input);
-            printf("Read input, new state: %c\n", input);
+            printf("Read input, new state: %c\n\n", input);
         }
     }
 

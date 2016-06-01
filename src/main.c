@@ -22,12 +22,14 @@ int main(int argc, char* argv[]) {
     }
     printf("Image sampler initialized!\n\n");
 
+    printf("Initializing shaders...\n\n");
     Shader raw_shader;
     return_val = init_shader(&raw_shader, BASE_VS, RAW_FS);
     if (return_val < 0){
         errorlogger("Failed to initialize raw shader!");
         return ERROR_INIT_SHADER;
     }
+    printf("Shaders initialized!\n\n");
 
     Shader hg_shader;
     return_val = init_shader(&hg_shader, BASE_VS, HARRIS_GRADIENT);
@@ -35,6 +37,8 @@ int main(int argc, char* argv[]) {
         errorlogger("Failed to initialize vertical harris gradient shader!");
         return ERROR_INIT_SHADER;
     }
+
+    Shader* current_shader = &raw_shader;
 
     Texture sample_texture;
     return_val = init_texture(&sample_texture, &sampler);
@@ -52,11 +56,17 @@ int main(int argc, char* argv[]) {
     }
     printf("Input controller initialized!\n\n");
 
+    printf("Initializing timers...\n\n");
+    Timer looptimer;
+    unsigned long sample_time;
+    unsigned long rendering_time;
+    printf("Timers initialized!\n\n");
+
     //Main Loop
     /* ================================================ */
     printf("Main loop running!\n\n");
-    Shader* current_shader = &raw_shader;
-    char state = INPUT_DISPLAY_RAW;
+
+    GLchar state = INPUT_DISPLAY_RAW;
     while(state != INPUT_QUITTING){
         read_state(&controller, &state);
         switch(state){
@@ -78,10 +88,16 @@ int main(int argc, char* argv[]) {
             }
         }
 
+        restart_timer(&looptimer);
         capture_image(&sampler);
+        sample_time = return_timediff(&looptimer);
+        restart_timer(&looptimer);
+
         update_texture(&sample_texture, &sampler);
         render_quad(&renderer);
-        usleep(100);
+        rendering_time = return_timediff(&looptimer);
+
+        printf("Image sampled in: %.3ld ms, Rendered in: %.3ld ms, Total loop time: %.3ld ms  \r", sample_time, rendering_time, sample_time + rendering_time);
     }
 
     printf("Exiting main loop!\n\n");
