@@ -20,23 +20,23 @@
 #include <unistd.h>
 
 typedef struct Renderer{
-        uint32_t buffer_width;
-        uint32_t buffer_height;
+    uint32_t buffer_width;
+    uint32_t buffer_height;
 
-        EGLint num_configs;
-        EGLConfig* configs;
-        EGLConfig config;
+    EGLint num_configs;
+    EGLConfig* configs;
+    EGLConfig config;
 
-   	HAL_Window window;
+    HAL_Window window;
 
-	EGLDisplay display;
-	EGLSurface surface;
-	EGLContext context;
+    EGLDisplay display;
+    EGLSurface surface;
+    EGLContext context;
 
-	GLuint quad_VBO;
-	GLuint framebuffers[NUM_FRAMEBUFFERS];
-	GLuint color_buffers[NUM_FRAMEBUFFERS];
-	GLuint last_framebuffer;
+    GLuint quad_VBO;
+    GLuint framebuffers[NUM_FRAMEBUFFERS];
+    GLuint color_buffers[NUM_FRAMEBUFFERS];
+    GLuint last_framebuffer;
 }Renderer;
 
 EGLint init_renderer(Renderer* renderer);
@@ -54,8 +54,8 @@ GLint init_quad(Renderer* renderer);
 GLint print_configs(Renderer* renderer, EGLint num_configs);
 GLint upload_buffer_size(Renderer* renderer, Shader* shader);
 
-GLint render_quad_offscreen(Renderer* renderer);
-GLint bind_framebuffer_texture(Renderer* renderer, GLuint texture_unit, Shader* shader, GLuint uniform_index);
+GLint render_quad_offscreen(Renderer* renderer, GLuint framebuffer);
+GLint use_framebuffer_texture(Renderer* renderer, GLuint texture_unit, Shader* shader, GLuint uniform_index, GLuint framebuffer_texture);
 
 GLint render_quad(Renderer* renderer);
 GLint render_quad_to_screen(Renderer* renderer);

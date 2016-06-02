@@ -13,8 +13,8 @@
 #define MAX_UNIFORMS            10
 #define WINDOW_SCALE            2
 
-#define SAMPLE_WIDTH            640
-#define SAMPLE_HEIGHT           480
+#define SAMPLE_WIDTH            1000
+#define SAMPLE_HEIGHT           1000
 
 #define OPENGL_VERSION          "#version 100\n"
 #define PRINT_EGL_CONFIGS       0

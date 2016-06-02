@@ -38,18 +38,18 @@ EGLint init_renderer(Renderer* renderer){
             return ERROR_INIT_SURFACE;
         }
 
-        return_val = init_framebuffers(renderer);
-        if (return_val < 0){
-            errorlogger("Failed to initialize framebuffers!");
-            return ERROR_INIT_SURFACE;
-        }
-
         init_ogl(renderer);
 
         return_val = init_quad(renderer);
         if(return_val < 0){
             errorlogger("Failed to initialize quad!");
             return ERROR_INIT_QUAD;
+        }
+
+        return_val = init_framebuffers(renderer);
+        if (return_val < 0){
+            errorlogger("Failed to initialize framebuffers!");
+            return ERROR_INIT_SURFACE;
         }
 
 	return 0;
@@ -171,14 +171,44 @@ GLint init_ogl(Renderer* renderer){
     //glViewport(0, 0, (GLsizei)renderer->buffer_width, (GLsizei)renderer->buffer_height);
     glDisable(GL_CULL_FACE);
     glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_SCISSOR_TEST);
     check_ogl_error();
     return 0;
 }
 
 GLint init_framebuffers(Renderer* renderer){
     glGenFramebuffers(2, &(renderer->framebuffers[0]));
+    glGenTextures(2, &(renderer->color_buffers[0]));
+    int i;
+    for (i = 0; i < NUM_FRAMEBUFFERS; ++i){
+        glBindFramebuffer(GL_FRAMEBUFFER, renderer->framebuffers[i]);
+        glBindTexture(GL_TEXTURE_2D, renderer->color_buffers[i]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, renderer->buffer_width, renderer->buffer_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderer->color_buffers[i], 0);
+        if(check_ogl_error()){
+            errorlogger("Failed to initialize framebuffers!");
+            return ERROR_INIT_FRAMEBUFFERS;
+        }
+
+        if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
+            errorlogger("Framebuffer is incomplete!");
+            return ERROR_INIT_FRAMEBUFFERS;
+        }
+        else{
+            printf("Framebuffer: %d initialized!\n\n", i);
+        }
+    }
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    renderer->last_framebuffer = 1;
+    renderer->last_framebuffer = 0;
 
     return 0;
 }
@@ -209,7 +239,7 @@ GLint init_quad(Renderer* renderer){
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	if(check_ogl_error()){
 		errorlogger("Failed to set vertex attributes for quad VBO in renderer!");
 		glDeleteBuffers(1, &(renderer->quad_VBO));
@@ -219,36 +249,19 @@ GLint init_quad(Renderer* renderer){
 	return 0;
 }
 
-GLint render_quad_offscreen(Renderer* renderer){
-    if (renderer->last_framebuffer == NUM_FRAMEBUFFERS){
-        glBindFramebuffer(GL_FRAMEBUFFER, 1);
-        renderer->last_framebuffer = 1;
+GLint render_quad_offscreen(Renderer* renderer, GLuint framebuffer){
+    if (framebuffer >= NUM_FRAMEBUFFERS){
+        framebuffer = NUM_FRAMEBUFFERS - 1;
     }
-    else{
-        renderer->last_framebuffer += 1;
-        glBindFramebuffer(GL_FRAMEBUFFER, renderer->last_framebuffer - 1);
+    renderer->last_framebuffer = framebuffer;
 
-    }
-
+    glBindFramebuffer(GL_FRAMEBUFFER, renderer->framebuffers[framebuffer]);
     GLint result = render_quad(renderer);
     if (result < 0){
         errorlogger("Failed to render quad!");
         return ERROR_DRAW_QUAD;
     }
 
-    return 0;
-}
-
-GLint bind_framebuffer_texture(Renderer* renderer, GLuint texture_unit, Shader* shader, GLuint uniform_index){
-        glActiveTexture(GL_TEXTURE0 + texture_unit);
-        glBindTexture(GL_TEXTURE_2D, renderer->color_buffers[renderer->last_framebuffer - 1]);
-        glUniform1i(load_uniform_location(shader, uniform_index), texture_unit);
-
-        GLint error = check_ogl_error();
-        if (error < 0){
-            errorlogger("Failed to use texture!");
-            return ERROR_USE_TEXTURE;
-        }
     return 0;
 }
 
@@ -259,24 +272,35 @@ GLint render_quad_to_screen(Renderer* renderer){
         errorlogger("Failed to render quad!");
         return ERROR_DRAW_QUAD;
     }
+
+    return 0;
 }
 
 GLint render_quad(Renderer* renderer){
-    glClear(GL_COLOR_BUFFER_BIT);
     glBindBuffer(GL_ARRAY_BUFFER, renderer->quad_VBO);
     glEnableVertexAttribArray(0);
 
-    glFlush();
-
+    glClear(GL_COLOR_BUFFER_BIT);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    eglSwapBuffers(renderer->display, renderer->surface);
 
     if(check_ogl_error()){
         errorlogger("Failed to render quad");
         return ERROR_DRAW_QUAD;
     }
+    return 0;
+}
+
+GLint use_framebuffer_texture(Renderer* renderer, GLuint texture_unit, Shader* shader, GLuint uniform_index, GLuint framebuffer_texture){
+    glActiveTexture(GL_TEXTURE0 + texture_unit);
+    glBindTexture(GL_TEXTURE_2D, renderer->color_buffers[framebuffer_texture]);
+    glUniform1i(load_uniform_location(shader, uniform_index), texture_unit);
+
+    GLint error = check_ogl_error();
+    if (error < 0){
+        errorlogger("Failed to use texture!");
+        return ERROR_USE_TEXTURE;
+    }
+
     return 0;
 }
 

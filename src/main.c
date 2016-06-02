@@ -37,10 +37,31 @@ int main(int argc, char* argv[]) {
         return ERROR_INIT_SHADER;
     }
 
+    Shader cm_shader;
+    return_val = init_shader(&cm_shader, BASE_VS, CALC_MEDIAN);
+    if (return_val < 0){
+        errorlogger("Failed to initialize median calculation shader!");
+        return ERROR_INIT_SHADER;
+    }
+
+    Shader cv_shader;
+    return_val = init_shader(&cv_shader, BASE_VS, CALC_VARIANCE);
+    if (return_val < 0){
+        errorlogger("Failed to initialize variance calculation shader!");
+        return ERROR_INIT_SHADER;
+    }
+
     Shader fd_shader;
     return_val = init_shader(&fd_shader, BASE_VS, FEATURE_DETECTOR);
     if (return_val < 0){
         errorlogger("Failed to initialize feature detector shader!");
+        return ERROR_INIT_SHADER;
+    }
+
+    Shader ff_shader;
+    return_val = init_shader(&ff_shader, BASE_VS, FEATURE_FILTER);
+    if (return_val < 0){
+        errorlogger("Failed to initialize feature filtering shader!");
         return ERROR_INIT_SHADER;
     }
     printf("Shaders initialized!\n\n");
@@ -74,6 +95,7 @@ int main(int argc, char* argv[]) {
 
     GLchar state = INPUT_DISPLAY_RAW;
     while(state != INPUT_QUITTING){
+            GLint result;
         read_state(&controller, &state);
 
         restart_timer(&looptimer);
@@ -84,31 +106,69 @@ int main(int argc, char* argv[]) {
         switch(state){
             case INPUT_DISPLAY_RAW:{
                 use_shader(&raw_shader);
-                use_texture(&sample_texture, 0, &raw_shader, 0);
+                use_texture(&sample_texture, 0, &raw_shader, SAMPLE_TEXTURE);
                 update_texture(&sample_texture, &sampler);
-                render_quad(&renderer);
+                render_quad_to_screen(&renderer);
                 break;
             }
             case INPUT_DISPLAY_HARRIS:{
                 use_shader(&hg_shader);
-                use_texture(&sample_texture, 0, &hg_shader, 0);
-                upload_buffer_size(&renderer, &hg_shader);
+                use_texture(&sample_texture, 0, &hg_shader, SAMPLE_TEXTURE);
                 update_texture(&sample_texture, &sampler);
-                render_quad(&renderer);
+                upload_buffer_size(&renderer, &hg_shader);
+                render_quad_to_screen(&renderer);
                 break;
             }
             case INPUT_DISPLAY_FEATURES:{
                 use_shader(&hg_shader);
                 upload_buffer_size(&renderer, &hg_shader);
-                use_texture(&sample_texture, 0, &hg_shader, 0);
+                use_texture(&sample_texture, 0, &hg_shader, SAMPLE_TEXTURE);
                 update_texture(&sample_texture, &sampler);
-                render_quad(&renderer);
+                result = render_quad_offscreen(&renderer, 0);
+                if (result < 0){
+                    errorlogger("Failed to render gradients!\n\n");
+                    exit(1);
+                }
+
+
+                use_shader(&cm_shader);
+                upload_buffer_size(&renderer, &cm_shader);
+                use_framebuffer_texture(&renderer, 0, &cm_shader, SAMPLE_TEXTURE, 0);
+                result = render_quad_offscreen(&renderer, 1);
+                if (result < 0){
+                    errorlogger("Failed to render medians!\n\n");
+                    exit(1);
+                }
+
+                use_shader(&cv_shader);
+                upload_buffer_size(&renderer, &cv_shader);
+                use_framebuffer_texture(&renderer, 0, &cv_shader, SAMPLE_TEXTURE, 0);
+                use_framebuffer_texture(&renderer, 1, &cv_shader, SAMPLE_TEXTURE_2, 1);
+                result = render_quad_offscreen(&renderer, 2);
+                if (result < 0){
+                    errorlogger("Failed to render variance!\n\n");
+                    exit(1);
+                }
+
+
+                use_shader(&fd_shader);
+                use_framebuffer_texture(&renderer, 0, &fd_shader, SAMPLE_TEXTURE, 1);
+                use_framebuffer_texture(&renderer, 1, &fd_shader, SAMPLE_TEXTURE_2, 2);
+                //render_quad_offscreen(&renderer, 1);
+                render_quad_to_screen(&renderer);
+
+                /*use_shader(&ff_shader);
+                upload_buffer_size(&renderer, &ff_shader);
+                use_framebuffer_texture(&renderer, 0, &ff_shader, SAMPLE_TEXTURE, 1);
+                render_quad_to_screen(&renderer);*/
                 break;
             }
             default:{
                 continue;
             }
         }
+
+        eglSwapBuffers(renderer.display, renderer.surface);
         rendering_time = return_timediff(&looptimer);
 
         printf("Image sampled in: %.3ld ms, Rendered in: %.3ld ms, Total loop time: %.3ld ms  \r", sample_time, rendering_time, sample_time + rendering_time);

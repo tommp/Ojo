@@ -60,11 +60,12 @@
 #define ERROR_UPLOAD_SCREEN_SIZE            -145
 #define ERROR_INIT_FRAMEBUFFERS             -146
 
-#define NUM_FRAMEBUFFERS                    4
+#define NUM_FRAMEBUFFERS                    3
 
 //Shader uniforms
 #define SAMPLE_TEXTURE                      0
-#define INV_BUFFER_SIZE                     1
+#define SAMPLE_TEXTURE_2                    1
+#define INV_BUFFER_SIZE                     2
 
 //Shader programs
 #define BASE_VS                            "quad.vs"

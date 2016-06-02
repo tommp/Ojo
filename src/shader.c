@@ -25,9 +25,13 @@ GLint init_uniforms(Shader* shader){
     }
 
     //Sample texture uniform
-    char sample_uniform[] = "sampler_texture";
+    char sample_uniform[] = "sample_texture";
     shader->uniform_names[SAMPLE_TEXTURE] = (char*)malloc(sizeof(sample_uniform));
     strcpy(shader->uniform_names[SAMPLE_TEXTURE], sample_uniform);
+
+    char sample_uniform_2[] = "sample_texture_2";
+    shader->uniform_names[SAMPLE_TEXTURE_2] = (char*)malloc(sizeof(sample_uniform_2));
+    strcpy(shader->uniform_names[SAMPLE_TEXTURE_2], sample_uniform);
 
     //Buffer dimensions
     char bs_uniform[] = "inv_buffer_size";

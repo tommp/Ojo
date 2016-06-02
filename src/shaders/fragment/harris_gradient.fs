@@ -8,7 +8,7 @@ highp vec2 harris_kernel = vec2(1.0, 2.0);
 
 const highp float NORM_FACTOR  = 0.16666666;
 
-const vec3 LUM_COEFF = vec3(0.33, 0.33, 0.33);//vec3(0.22, 0.707, 0.071);
+const vec3 LUM_COEFF = vec3(0.22, 0.707, 0.071);
 
 float calc_luminance(vec3 color){
     return dot(color, LUM_COEFF);
@@ -30,9 +30,9 @@ void main(){
 
         vec2 grad = vec2(h_sum_1 - h_sum_2, v_sum_1 - v_sum_2) * NORM_FACTOR;
 
-        float grad_length = length(grad);
+        float grad_length = length(grad) / 1.73205;
 
-        grad += 1.0;
+        grad += vec2(1.0);
         grad *= 0.5;
 
         gl_FragColor = vec4(grad, grad_length, 1.0);
