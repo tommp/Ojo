@@ -73,7 +73,7 @@
 #define RAW_FS                             "raw.fs"
 #define VERTICAL_BLUR_FS                   "vertical_blur.fs"
 #define HORIZONTAL_BLUR_FS                 "horizontal_blur.fs"
-#define HARRIS_GRADIENT                    "harris_gradient.fs"
+#define CALC_GRADIENT                      "calc_gradient.fs"
 #define GRAYSCALE_CONVERTER                "grayscale_converter.fs"
 #define FEATURE_DETECTOR                   "feature_detector.fs"
 #define FEATURE_FILTER                     "feature_filter.fs"

@@ -31,9 +31,9 @@ int main(int argc, char* argv[]) {
     }
 
     Shader hg_shader;
-    return_val = init_shader(&hg_shader, BASE_VS, HARRIS_GRADIENT);
+    return_val = init_shader(&hg_shader, BASE_VS, CALC_GRADIENT);
     if (return_val < 0){
-        errorlogger("Failed to initialize vertical harris gradient shader!");
+        errorlogger("Failed to initialize gradient shader!");
         return ERROR_INIT_SHADER;
     }
 
