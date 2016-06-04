@@ -79,5 +79,8 @@
 #define FEATURE_FILTER                     "feature_filter.fs"
 #define CALC_MEDIAN                        "calc_median.fs"
 #define CALC_VARIANCE                      "calc_variance.fs"
+#define CALC_VERTICAL_BLUR                 "calc_vertical_blur.fs"
+#define CALC_HORIZONTAL_BLUR               "calc_horizontal_blur.fs"
+#define CALC_SECOND_GRADIENT               "calc_second_gradient.fs"
 
 #endif

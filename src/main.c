@@ -37,6 +37,13 @@ int main(int argc, char* argv[]) {
         return ERROR_INIT_SHADER;
     }
 
+    Shader hg2_shader;
+    return_val = init_shader(&hg2_shader, BASE_VS, CALC_SECOND_GRADIENT);
+    if (return_val < 0){
+        errorlogger("Failed to initialize second gradient shader!");
+        return ERROR_INIT_SHADER;
+    }
+
     Shader cm_shader;
     return_val = init_shader(&cm_shader, BASE_VS, CALC_MEDIAN);
     if (return_val < 0){
@@ -62,6 +69,20 @@ int main(int argc, char* argv[]) {
     return_val = init_shader(&ff_shader, BASE_VS, FEATURE_FILTER);
     if (return_val < 0){
         errorlogger("Failed to initialize feature filtering shader!");
+        return ERROR_INIT_SHADER;
+    }
+
+    Shader hb_shader;
+    return_val = init_shader(&hb_shader, BASE_VS, CALC_HORIZONTAL_BLUR);
+    if (return_val < 0){
+        errorlogger("Failed to initialize horizontal blur shader!");
+        return ERROR_INIT_SHADER;
+    }
+
+    Shader vb_shader;
+    return_val = init_shader(&vb_shader, BASE_VS, CALC_VERTICAL_BLUR);
+    if (return_val < 0){
+        errorlogger("Failed to initialize vertical blur shader!");
         return ERROR_INIT_SHADER;
     }
     printf("Shaders initialized!\n\n");
@@ -120,9 +141,9 @@ int main(int argc, char* argv[]) {
                 break;
             }
             case INPUT_DISPLAY_FEATURES:{
-                use_shader(&hg_shader);
-                upload_buffer_size(&renderer, &hg_shader);
-                use_texture(&sample_texture, 0, &hg_shader, SAMPLE_TEXTURE);
+                use_shader(&hb_shader);
+                upload_buffer_size(&renderer, &hb_shader);
+                use_texture(&sample_texture, 0, &hb_shader, SAMPLE_TEXTURE);
                 update_texture(&sample_texture, &sampler);
                 result = render_quad_offscreen(&renderer, 0);
                 if (result < 0){
@@ -130,11 +151,37 @@ int main(int argc, char* argv[]) {
                     exit(1);
                 }
 
-
-                use_shader(&cm_shader);
-                upload_buffer_size(&renderer, &cm_shader);
-                use_framebuffer_texture(&renderer, 0, &cm_shader, SAMPLE_TEXTURE, 0);
+                use_shader(&vb_shader);
+                upload_buffer_size(&renderer, &vb_shader);
+                use_framebuffer_texture(&renderer, 0, &vb_shader, SAMPLE_TEXTURE, 0);
                 result = render_quad_offscreen(&renderer, 1);
+                if (result < 0){
+                    errorlogger("Failed to render gradients!\n\n");
+                    exit(1);
+                }
+
+                use_shader(&hg_shader);
+                upload_buffer_size(&renderer, &hg_shader);
+                use_framebuffer_texture(&renderer, 0, &hg_shader, SAMPLE_TEXTURE, 1);
+                result = render_quad_offscreen(&renderer, 0);
+                if (result < 0){
+                    errorlogger("Failed to render gradients!\n\n");
+                    exit(1);
+                }
+
+                use_shader(&hg2_shader);
+                upload_buffer_size(&renderer, &hg2_shader);
+                use_framebuffer_texture(&renderer, 0, &hg2_shader, SAMPLE_TEXTURE, 0);
+                result = render_quad_offscreen(&renderer, 1);
+                if (result < 0){
+                    errorlogger("Failed to render gradients!\n\n");
+                    exit(1);
+                }
+
+                /*use_shader(&cm_shader);
+                upload_buffer_size(&renderer, &cm_shader);
+                use_framebuffer_texture(&renderer, 0, &cm_shader, SAMPLE_TEXTURE, 1);
+                result = render_quad_offscreen(&renderer, 0);
                 if (result < 0){
                     errorlogger("Failed to render medians!\n\n");
                     exit(1);
@@ -148,12 +195,11 @@ int main(int argc, char* argv[]) {
                 if (result < 0){
                     errorlogger("Failed to render variance!\n\n");
                     exit(1);
-                }
+                }*/
 
 
                 use_shader(&fd_shader);
                 use_framebuffer_texture(&renderer, 0, &fd_shader, SAMPLE_TEXTURE, 1);
-                use_framebuffer_texture(&renderer, 1, &fd_shader, SAMPLE_TEXTURE_2, 2);
                 //render_quad_offscreen(&renderer, 1);
                 render_quad_to_screen(&renderer);
 
