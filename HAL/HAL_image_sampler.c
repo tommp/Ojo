@@ -29,18 +29,25 @@ GLint init_image_sampler(HAL_image_sampler* sampler){
     sampler->current_sample = 0;
 
     printf("Sampling initial test image...\n\n");
-    result = capture_image(sampler);
+    result = sample_image(sampler);
     if (result < 0){
         errorlogger("Failed to sample test image!");
         return ERROR_MEMORY_MAP;
     }
     printf("Sampling successful!\n\n");
 
+#if USE_INTEGRAL_IMAGE
+    sampler->ibuffer = malloc(sizeof(uint32_t) * sampler->buffer_width * sampler->buffer_height);
+#endif
+
     return 0;
 }
 
 GLint destroy_image_sampler(HAL_image_sampler* sampler){
     GLint result = close(sampler->driver_file_descriptor);
+#if USE_INTEGRAL_IMAGE
+    free(sampler->ibuffer);
+#endif
     if (result < 0){
         errorlogger("Failed to close driver descriptor!");
         return ERROR_DESTROY_SAMPLER;
@@ -48,12 +55,52 @@ GLint destroy_image_sampler(HAL_image_sampler* sampler){
     return 0;
 }
 
-EGLint sample_grayscale_image(HAL_image_sampler* sampler){
+#if USE_INTEGRAL_IMAGE
+GLint convert_sample_to_grayscale(HAL_image_sampler* sampler){
+    int i, j;
+    char lum[] = LUM_VECTOR;
+    for (i = 0; i < sampler->buffer_width; ++i){
+        for (j = 0; j < sampler->buffer_height; ++j)   {
+            sampler->ibuffer[i * sampler->buffer_width + j] = (char)sampler->buffer[i * 3 * sampler->buffer_height + j * 3] * lum[0] +
+                                                              (char)sampler->buffer[i * 3 * sampler->buffer_height + j * 3 + 1] * lum[1] +
+                                                              (char)sampler->buffer[i * 3 * sampler->buffer_height + j * 3 + 2] * lum[2];
+        }
+    }
 
     return 0;
 }
 
-GLint capture_image(HAL_image_sampler* sampler){
+GLint sample_grayscale_image(HAL_image_sampler* sampler){
+    sample_image(sampler);
+    convert_sample_to_grayscale(sampler);
+    return 0;
+}
+
+
+GLint convert_sample_to_integral_image(HAL_image_sampler* sampler){
+    int i, j;
+    for (i = 0; i < sampler->buffer_width; ++i){
+        for (j = 0; j < sampler->buffer_height; ++j)   {
+            if (i != 0) {
+                sampler->ibuffer[i * sampler->buffer_height + j] += sampler->ibuffer[(i - 1) * sampler->buffer_height + j];
+            }
+            if (j != 0) {
+                sampler->ibuffer[i * sampler->buffer_height + j] += sampler->ibuffer[i * sampler->buffer_height + (j - 1)];
+            }
+        }
+    }
+    return 0;
+}
+
+GLint sample_integral_image(HAL_image_sampler* sampler){
+    sample_image(sampler);
+    convert_sample_to_grayscale(sampler);
+    convert_sample_to_integral_image(sampler);
+    return 0;
+}
+#endif
+
+GLint sample_image(HAL_image_sampler* sampler){
     struct v4l2_buffer buf = {0};
     buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     buf.memory = V4L2_MEMORY_MMAP;
@@ -189,7 +236,7 @@ GLint configure_settings(HAL_image_sampler* sampler){
         printf("  FMT : CE Desc\n--------------------\n");
         while (xioctl(sampler->driver_file_descriptor, VIDIOC_ENUM_FMT, &fmtdesc) == 0){
                 strncpy(fourcc, (char *)&fmtdesc.pixelformat, 4);
-                if (fmtdesc.pixelformat == V4L2_PIX_FMT_SGRBG10)
+                if (fmtdesc.pixelformat == V4L2_PIX_FMT_RGB24)
                     support_grbg10 = 1;
                 c = fmtdesc.flags & 1? 'C' : ' ';
                 e = fmtdesc.flags & 2? 'E' : ' ';

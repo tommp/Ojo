@@ -12,9 +12,10 @@
 #define QUERY_CAPABILITIES      1
 #define MAX_UNIFORMS            10
 #define WINDOW_SCALE            2
+#define USE_INTEGRAL_IMAGE      0
 
-#define SAMPLE_WIDTH            700
-#define SAMPLE_HEIGHT           700
+#define SAMPLE_WIDTH            720
+#define SAMPLE_HEIGHT           512
 
 #define OPENGL_VERSION          "#version 100\n"
 #define PRINT_EGL_CONFIGS       0

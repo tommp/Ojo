@@ -8,8 +8,11 @@ GLint init_texture(Texture* texture, HAL_image_sampler* sampler){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
+#if USE_INTEGRAL_IMAGE
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sampler->buffer_width, sampler->buffer_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, sampler->ibuffer);
+#else
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, sampler->buffer_width, sampler->buffer_height, 0, GL_RGB, GL_UNSIGNED_BYTE, sampler->buffer);
+#endif
     glBindTexture(GL_TEXTURE_2D, 0);
 
     GLint error = check_ogl_error();
@@ -33,7 +36,11 @@ GLint destroy_texture(Texture* texture){
 }
 
 GLint update_texture(Texture* texture, HAL_image_sampler* sampler){
+#if USE_INTEGRAL_IMAGE
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sampler->buffer_width, sampler->buffer_height, GL_RGBA, GL_UNSIGNED_BYTE, sampler->ibuffer);
+#else
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sampler->buffer_width, sampler->buffer_height, GL_RGB, GL_UNSIGNED_BYTE, sampler->buffer);
+#endif
     GLint error = check_ogl_error();
     if (error < 0){
         errorlogger("Failed to update texture!");

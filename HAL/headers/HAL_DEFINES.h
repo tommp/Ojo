@@ -10,6 +10,7 @@
 
 //General vars
 #define CLEARCOLOR                          1.0, 0.0, 0.0, 1.0
+#define LUM_VECTOR                          {0.22, 0.707, 0.071}
 
 #define ERROR_INIT_RENDERER                 -1
 
@@ -82,5 +83,7 @@
 #define CALC_VERTICAL_BLUR                 "calc_vertical_blur.fs"
 #define CALC_HORIZONTAL_BLUR               "calc_horizontal_blur.fs"
 #define CALC_SECOND_GRADIENT               "calc_second_gradient.fs"
+#define NON_MAX_SUPPRESS                   "non_max_suppress.fs"
+#define RESULT                             "result.fs"
 
 #endif

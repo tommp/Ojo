@@ -10,5 +10,5 @@ uniform highp sampler2D sample_texture;
 
 void main(){
         //glFragColor is an inbuilt variable at the fragment shader stage that represents the final color of a pixel in the output buffer.
-	gl_FragColor = texture2D(sample_texture, frag_tex_coord);
+        gl_FragColor = texture2D(sample_texture, frag_tex_coord);
 }
