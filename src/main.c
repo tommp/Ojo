@@ -51,20 +51,6 @@ int main(int argc, char* argv[]) {
         return ERROR_INIT_SHADER;
     }
 
-    Shader cm_shader;
-    return_val = init_shader(&cm_shader, BASE_VS, CALC_MEDIAN);
-    if (return_val < 0){
-        errorlogger("Failed to initialize median calculation shader!");
-        return ERROR_INIT_SHADER;
-    }
-
-    Shader cv_shader;
-    return_val = init_shader(&cv_shader, BASE_VS, CALC_VARIANCE);
-    if (return_val < 0){
-        errorlogger("Failed to initialize variance calculation shader!");
-        return ERROR_INIT_SHADER;
-    }
-
     Shader fd_shader;
     return_val = init_shader(&fd_shader, BASE_VS, FEATURE_DETECTOR);
     if (return_val < 0){
@@ -190,34 +176,15 @@ int main(int argc, char* argv[]) {
                     exit(1);
                 }
 
-                /*use_shader(&cm_shader);
-                upload_buffer_size(&renderer, &cm_shader);
-                use_framebuffer_texture(&renderer, 0, &cm_shader, SAMPLE_TEXTURE, 1);
-                result = render_quad_offscreen(&renderer, 0);
-                if (result < 0){
-                    errorlogger("Failed to render medians!\n\n");
-                    exit(1);
-                }
-
-                use_shader(&cv_shader);
-                upload_buffer_size(&renderer, &cv_shader);
-                use_framebuffer_texture(&renderer, 0, &cv_shader, SAMPLE_TEXTURE, 0);
-                use_framebuffer_texture(&renderer, 1, &cv_shader, SAMPLE_TEXTURE_2, 1);
-                result = render_quad_offscreen(&renderer, 2);
-                if (result < 0){
-                    errorlogger("Failed to render variance!\n\n");
-                    exit(1);
-                }*/
-
 
                 use_shader(&fd_shader);
                 use_framebuffer_texture(&renderer, 0, &fd_shader, SAMPLE_TEXTURE, 1);
-                render_quad_offscreen(&renderer, 0);
+                render_quad_offscreen(&renderer, 2);
 
 
                 use_shader(&nms_shader);
                 upload_buffer_size(&renderer, &nms_shader);
-                use_framebuffer_texture(&renderer, 0, &nms_shader, SAMPLE_TEXTURE, 0);
+                use_framebuffer_texture(&renderer, 0, &nms_shader, SAMPLE_TEXTURE, 2);
                 result = render_quad_offscreen(&renderer, 1);
                 if (result < 0){
                     errorlogger("Failed to render non maximum supressed features!\n\n");
